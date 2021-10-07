@@ -1,4 +1,4 @@
-from diziroll import DiziRoll as dr
+from .diziroll import DiziRoll as dr
 
 class Questions:
     go_back = "⬅  Geri Git"

@@ -1,6 +1,6 @@
-from .lib.diziroll import DiziRoll as dr
+from lib.diziroll import DiziRoll as dr
 from PyInquirer import prompt, print_json
-from .lib.questions import Questions as q
+from lib.questions import Questions as q
 from os import path
 import os
 from colorama import init, Fore, Back
