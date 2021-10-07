@@ -9,3 +9,4 @@ $ python3 index.py
 
 # Önemli bilgiler
 Videolar ve altyazılar ```<dizi-ismi>/```'ye kaydedilir.
+![](/screenshots/works.gif)
