@@ -1,0 +1,4 @@
+coloroma
+youtube-dl
+fake_useragent
+PyInquirer
