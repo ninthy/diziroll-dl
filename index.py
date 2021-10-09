@@ -7,7 +7,7 @@ from rich import print as rprint
 import subprocess
 from rich.progress import Progress, BarColumn, SpinnerColumn, ProgressColumn, TimeRemainingColumn, DownloadColumn
 
-VERSION = 1.9
+VERSION = 2.0
 
 clear = lambda: os.system('cls' if os.name in ('nt', 'dos') else 'clear')
 

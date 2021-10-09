@@ -1,4 +1,4 @@
-coloroma
+rich
 youtube-dl
 fake_useragent
 PyInquirer

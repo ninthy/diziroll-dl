@@ -1,5 +1,5 @@
-# diziroll-dl v1.0
-DiziRoll sitesi için dizi indirici, eğitim amaçlı yapılmıştır.
+# diziroll-dl
+Diziroll sitesi için dizi indirici, eğitim amaçlı yapılmıştır.
 
 # Kullanımı
 
