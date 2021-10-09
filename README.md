@@ -13,4 +13,4 @@ $ python3 index.py
 Videolar ve altyazılar ```<dizi-ismi>/```'ye kaydedilir.
 
 
-![](/screenshots/works.gif)
+![](https://i.imgur.com/4zsU4MP.mp4)
