@@ -68,7 +68,7 @@ if __name__ == "__main__":
                     task = progress.add_task("[yellow]?[/yellow] Bölümler indiriliyor..", total=len(episodes))
                     for episode in episodes:                    
                         src, subtitle_src, episode_title, season = episode
-
+                        # print(src, subtitle_src)
                         season_path = path.join(os.getcwd(), folder_name, season["slug"])
                         if not path.isdir(season_path):
                             os.mkdir(season_path)
@@ -76,10 +76,10 @@ if __name__ == "__main__":
                         source_path = path.join(season_path,  episode_title)
                         
                         progress.update(task, description=f"{episode_title} altyazı indiriliyor.")
-                        dr.download_subtitle(src, path=source_path)
+                        dr.download_subtitle(url=subtitle_src, path=source_path)
                         progress.update(task, description=f"{episode_title} altyazı indirildi.")
                         progress.update(task, description=f"{episode_title} video indiriliyor.")
-                        dr.download_video(url=src, path=source_path, episode_title=episode_title)
+                        dr.download_video(url=src, path=source_path)
                         progress.update(task, description=f"{episode_title} video indirildi.", advance=1)
                     progress.update(task, description="İndirme işlemi bitti: [yellow]%s" % source_path.split('\\')[:-1], completed=True)
                 # open("test.json", "w", encoding="utf-8").write(json.dumps(episode))
