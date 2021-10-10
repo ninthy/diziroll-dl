@@ -68,7 +68,7 @@ if __name__ == "__main__":
                     task = progress.add_task("[yellow]?[/yellow] Bölümler indiriliyor..", total=len(episodes))
                     for episode in episodes:                    
                         src, subtitle_src, episode_title, season = episode
-                        # print(src, subtitle_src)
+                        print(src, subtitle_src)
                         season_path = path.join(os.getcwd(), folder_name, season["slug"])
                         if not path.isdir(season_path):
                             os.mkdir(season_path)
