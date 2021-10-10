@@ -21,7 +21,7 @@ class Questions:
             'type': 'list',
             'name': 'selected_type',
             'message': 'İndirmek mi istiyorsunuz yoksa izlemek mi?',
-            'choices': [Questions.to_be_downloaded, Questions.to_be_watched]
+            'choices': [Questions.to_be_watched, Questions.to_be_downloaded]
             }
         ]
     @staticmethod

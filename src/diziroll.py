@@ -61,7 +61,7 @@ class DiziRoll:
         process.wait()
         
     @staticmethod
-    def download_video(url: str, path: str, episode_title: str):
+    def download_video(url: str, path: str):
         query = f'youtube-dl "{url}" -o "{path}.vtt"'
         process = subprocess.Popen(query, shell=True, stdout=subprocess.PIPE)
         process.wait()
@@ -78,18 +78,19 @@ class DiziRoll:
         except Exception as e:
             print(e)
             return None
+   
+    
     @staticmethod
-    def get_episodes_from_season(total_episodes: list, selected_res_answer: str, dr):
+    def get_episodes_from_season(total_episodes: list, selected_res_answer: str, dr, season: str):
         episodes = []
-        with Progress(SpinnerColumn(), "[progress.description]{task.description}", BarColumn(style="yellow", complete_style="green", finished_style="red"), "[progress.percentage]{task.percentage:>3.0f}%", TimeRemainingColumn()) as progress:
+        with Progress(SpinnerColumn(), "[progress.description]{task.description}", BarColumn(complete_style="green", style="yellow", finished_style="red"), "[progress.percentage]{task.percentage:>3.0f}%", TimeRemainingColumn()) as progress:
             task = progress.add_task("[yellow]?[/yellow] Bölümler çekiliyor..", total=len(total_episodes))
             for idx, i in enumerate(total_episodes):
                 episode = dr.get_episode(i["id"])
                 if not episode:
                     rprint("[red]![/red] Bir hata oluştu.")
                     continue
-                
-                episode_title = '{0}. Bölüm - {1}'.format(str(idx+1), i["title"])
+                episode_title = '{season} {idx}. Bölüm - {title}'.format(season=season["title"], idx=str(idx+1), title=i["title"])
                 sources = episode["sources"]
                 subtitles = episode["subtitles"]
                 subtitle_src = [i["src"] for i in subtitles if i["srclang"] == "tr"][0]
@@ -112,5 +113,5 @@ class DiziRoll:
                             break                 
                 progress.update(task, description=f"[yellow]{episode_title}[/yellow] çekildi.", advance=1)
                 
-                episodes.append((source["src"], subtitle_src, episode_title))
+                episodes.append((source["src"], subtitle_src, episode_title, season))
         return episodes

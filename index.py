@@ -1,3 +1,4 @@
+from re import T
 from src.questions import Questions as q
 from src.diziroll import DiziRoll as dr
 from PyInquirer import prompt
@@ -6,6 +7,7 @@ import os
 from rich import print as rprint
 import subprocess
 from rich.progress import Progress, BarColumn, SpinnerColumn, ProgressColumn, TimeRemainingColumn, DownloadColumn
+from multiprocessing import Pool
 
 VERSION = 2.0
 
@@ -28,8 +30,6 @@ if __name__ == "__main__":
         if not shows:
             rprint("[red]![/red] Diziroll'a bağlanılamadı.")
             exit()
-        selected_type = prompt(q.get_select_type())["selected_type"]
-        is_downloadable = selected_type == q.to_be_downloaded
         
         while 1:
             selected_show_answer = prompt(q.get_select_show_question([i["name"] for i in shows] + [q.go_back]))["selected_show"]
@@ -43,7 +43,8 @@ if __name__ == "__main__":
             folder_name = show['slug']
             if not path.isdir(folder_name):
                 os.mkdir(folder_name)
-
+            selected_type = prompt(q.get_select_type())["selected_type"]
+            is_downloadable = selected_type == q.to_be_downloaded
             while 1:
                 titles = [i["title"] for i in show["seasons"]] + [q.go_back]
 
@@ -57,26 +58,30 @@ if __name__ == "__main__":
 
                 total_episodes = selected_season["episodes"][:len(selected_episode_answers)]
                 selected_res_answer = prompt(q.get_select_res_question())["selected_res"]
-
-                episodes = dr.get_episodes_from_season(total_episodes, selected_res_answer, dr)
+                episodes = dr.get_episodes_from_season(total_episodes, selected_res_answer, dr, selected_season)
                 if not is_downloadable:
-                    p = subprocess.Popen("mpv "+' '.join([('--{ "' +i[0]+'" --sub-files="' + i[1] + '" --force-media-title="' +i[2]+ '" --term-playing-msg="'+i[2] + '" --title="'+i[2] +'" --}') for i in episodes]))
+                    p = subprocess.call("mpv "+' '.join([('--{ "' +i[0]+'" --sub-files="' + i[1] + '" --force-media-title="' +i[2]+ '" --term-playing-msg="'+i[2] + '" --title="'+i[2] +'" --}') for i in episodes]), shell=True)
                     rprint("[yellow]? [cyan]mpv[/cyan] açıldı, bölümleri oynatma listesinden seçebilir veya geçebilirsiniz.[/yellow]")
                     exit()
                     
                 with Progress(SpinnerColumn(), "[progress.description]{task.description}", BarColumn(style="yellow", complete_style="green", finished_style="red"), "[progress.percentage]{task.percentage:>3.0f}%", TimeRemainingColumn()) as progress:
                     task = progress.add_task("[yellow]?[/yellow] Bölümler indiriliyor..", total=len(episodes))
                     for episode in episodes:                    
-                        src, subtitle_src, episode_title = episode
+                        src, subtitle_src, episode_title, season = episode
 
-                        source_path = path.join(os.getcwd(), folder_name, episode_title)
+                        season_path = path.join(os.getcwd(), folder_name, season["slug"])
+                        if not path.isdir(season_path):
+                            os.mkdir(season_path)
+                        
+                        source_path = path.join(season_path,  episode_title)
+                        
+                        progress.update(task, description=f"{episode_title} altyazı indiriliyor.")
                         dr.download_subtitle(src, path=source_path)
                         progress.update(task, description=f"{episode_title} altyazı indirildi.")
                         progress.update(task, description=f"{episode_title} video indiriliyor.")
                         dr.download_video(url=src, path=source_path, episode_title=episode_title)
                         progress.update(task, description=f"{episode_title} video indirildi.", advance=1)
                     progress.update(task, description="İndirme işlemi bitti: [yellow]%s" % source_path.split('\\')[:-1], completed=True)
-                    # print("! ", episode_title, "videosu indirildi.")
                 # open("test.json", "w", encoding="utf-8").write(json.dumps(episode))
 
                 break
