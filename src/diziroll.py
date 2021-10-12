@@ -91,7 +91,7 @@ class DiziRoll:
                 if not episode:
                     rprint("[red]![/red] Bir hata oluştu.")
                     continue
-                episode_title = '{season} {idx}. Bölüm - {title}'.format(season=season["title"], idx=str(idx+1), title=i["title"])
+                episode_title = '{season} {idx}. Bölüm - {title}'.format(season=season["title"], idx=i["sequence"], title=i["title"])
                 sources = episode["sources"]
                 subtitles = episode["subtitles"]
                 subtitle_src = [i["src"] for i in subtitles if i["srclang"] == "tr"][0]
@@ -108,7 +108,7 @@ class DiziRoll:
                             break
                     elif selected_res_answer == q.lowest_res:
                         lowest_res = str(min([int(i["res"]) for i in sources]))
-
+                        
                         if i["res"] == lowest_res:
                             source = i
                             break                 

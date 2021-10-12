@@ -55,12 +55,14 @@ if __name__ == "__main__":
                 selected_season = [i for i in show["seasons"] if i["title"] == selected_season_answer][0]
 
                 selected_episode_answers = prompt(q.get_select_episodes_question(selected_season["episodes"]))["selected_episodes"]
-
-                total_episodes = selected_season["episodes"][:len(selected_episode_answers)]
+                if len(selected_episode_answers) == 0:
+                    continue
+                first_index = int(selected_episode_answers[0][0]) - 1
+                total_episodes = selected_season["episodes"][first_index:len(selected_episode_answers)]
                 selected_res_answer = prompt(q.get_select_res_question())["selected_res"]
                 episodes = dr.get_episodes_from_season(total_episodes, selected_res_answer, dr, selected_season)
                 if not is_downloadable:
-                    p = subprocess.call("mpv "+' '.join([('--{ "' +i[0]+'" --sub-files="' + i[1] + '" --force-media-title="' +i[2]+ '" --term-playing-msg="'+i[2] + '" --title="'+i[2] +'" --}') for i in episodes]), shell=True)
+                    p = subprocess.Popen("mpv "+' '.join([('--{ "' +i[0]+'" --sub-files="' + i[1] + '" --force-media-title="' +i[2]+ '" --term-playing-msg="'+i[2] + '" --title="'+i[2] +'" --}') for i in episodes]))
                     rprint("[yellow]? [cyan]mpv[/cyan] açıldı, bölümleri oynatma listesinden seçebilir veya geçebilirsiniz.[/yellow]")
                     exit()
                     

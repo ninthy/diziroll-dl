@@ -63,7 +63,7 @@ class Questions:
 
                 'name': 'selected_episodes',
                 'message': 'Hangi bölümleri istiyorsunuz?',
-                'choices': [{"name": '{0}. Bölüm - {1}'.format(str(idx+1), i["title"])} for idx, i in enumerate(episodes)],
+                'choices': [{"index": (idx+1), "name": '{0}. Bölüm - {1}'.format(str(idx+1), i["title"])} for idx, i in enumerate(episodes)],
                 'validate': lambda answer: answer >= 1 or 'En az bir tane bölüm seçmek zorundasınız.'  
             }
         ]
