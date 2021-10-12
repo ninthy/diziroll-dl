@@ -58,7 +58,8 @@ if __name__ == "__main__":
                 if len(selected_episode_answers) == 0:
                     continue
                 first_index = int(selected_episode_answers[0][0]) - 1
-                total_episodes = selected_season["episodes"][first_index:len(selected_episode_answers)]
+                last_index = len(selected_episode_answers)+1
+                total_episodes = selected_season["episodes"][first_index:last_index]
                 selected_res_answer = prompt(q.get_select_res_question())["selected_res"]
                 episodes = dr.get_episodes_from_season(total_episodes, selected_res_answer, dr, selected_season)
                 if not is_downloadable:
