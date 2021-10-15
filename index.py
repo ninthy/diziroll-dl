@@ -12,6 +12,7 @@ from multiprocessing import Pool
 VERSION = 2.0
 
 clear = lambda: os.system('cls' if os.name in ('nt', 'dos') else 'clear')
+diziroll = dr()
 
 if __name__ == "__main__":
     while 1:
@@ -25,8 +26,8 @@ if __name__ == "__main__":
                                                  [yellow]by github.com/ninthy[/yellow] 
                                                      [green]v{str(VERSION)}[/green][/red]
         """)
-        suggested_show = prompt(q.get_show_name_question(dr))['show_name']
-        shows = dr.get_suggested_shows(suggested_show)
+        suggested_show = prompt(q.get_show_name_question(diziroll))['show_name']
+        shows = diziroll.get_suggested_shows(name=suggested_show)
         if not shows:
             rprint("[red]![/red] Diziroll'a bağlanılamadı.")
             exit()
@@ -36,7 +37,7 @@ if __name__ == "__main__":
             if selected_show_answer == q.go_back:
                 break
             selected_show = list(filter(lambda x: x["name"] == selected_show_answer, shows))[0]
-            show = dr.get_show(selected_show["url"][1::])
+            show = diziroll.get_show(selected_show["url"][1::])
             if not show:
                 rprint("[red]![/red] Diziroll'a bağlanılamadı.")
                 break
@@ -58,13 +59,17 @@ if __name__ == "__main__":
                 if len(selected_episode_answers) == 0:
                     continue
                 first_index = int(selected_episode_answers[0][0]) - 1
-                last_index = len(selected_episode_answers)+1
+                last_index = int(selected_episode_answers[-1][0]) + 1
                 total_episodes = selected_season["episodes"][first_index:last_index]
+                
                 selected_res_answer = prompt(q.get_select_res_question())["selected_res"]
-                episodes = dr.get_episodes_from_season(total_episodes, selected_res_answer, dr, selected_season)
+                episodes = diziroll.get_episodes_from_season(total_episodes, selected_res_answer, selected_season)
                 if not is_downloadable:
-                    p = subprocess.Popen("mpv "+' '.join([('--{ "' +i[0]+'" --sub-files="' + i[1] + '" --force-media-title="' +i[2]+ '" --term-playing-msg="'+i[2] + '" --title="'+i[2] +'" --}') for i in episodes]))
+                    query = "mpv "+' '.join([('--{ "' +i[0]+'" --sub-files="' + i[1] + '" --force-media-title="' +i[2]+ '" --term-playing-msg="'+i[2] + '" --title="'+i[2] +'" --}') for i in episodes])
+                    p = subprocess.Popen(query)
                     rprint("[yellow]? [cyan]mpv[/cyan] açıldı, bölümleri oynatma listesinden seçebilir veya geçebilirsiniz.[/yellow]")
+                    print(query)
+                    input()
                     exit()
                     
                 with Progress(SpinnerColumn(), "[progress.description]{task.description}", BarColumn(style="yellow", complete_style="green", finished_style="red"), "[progress.percentage]{task.percentage:>3.0f}%", TimeRemainingColumn()) as progress:

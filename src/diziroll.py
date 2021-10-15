@@ -27,9 +27,10 @@ headers = {
 
 
 class DiziRoll:  
+    def __init__(self):
+        pass
     
-    @staticmethod
-    def get_episode(id: int):
+    def get_episode(self, id: int):
         response = requests.get(endpoints["episode"].format(str(id)), headers=headers)
         try:
             data = response.json()
@@ -40,8 +41,7 @@ class DiziRoll:
             print(e)
             return None
 
-    @staticmethod
-    def get_show(slug: str):
+    def get_show(self, slug: str):
         response = requests.get(endpoints["main"].format(slug), headers=headers)
         try:
             data = response.json()
@@ -67,8 +67,7 @@ class DiziRoll:
         process = subprocess.Popen(query, shell=True, stdout=None)#, stdout=subprocess.PIPE)
         process.wait()
 
-    @staticmethod
-    def get_suggested_shows(name: str):
+    def get_suggested_shows(self, name: str):
         response = requests.post(endpoints["search"], data={"term": name}, headers=headers)
         try:
             data = response.json()
@@ -81,13 +80,12 @@ class DiziRoll:
             return None
    
     
-    @staticmethod
-    def get_episodes_from_season(total_episodes: list, selected_res_answer: str, dr, season: str):
+    def get_episodes_from_season(self, total_episodes: list, selected_res_answer: str, season: str):
         episodes = []
         with Progress(SpinnerColumn(), "[progress.description]{task.description}", BarColumn(complete_style="green", style="yellow", finished_style="red"), "[progress.percentage]{task.percentage:>3.0f}%", TimeRemainingColumn()) as progress:
             task = progress.add_task("[yellow]?[/yellow] Bölümler çekiliyor..", total=len(total_episodes))
             for idx, i in enumerate(total_episodes):
-                episode = dr.get_episode(i["id"])
+                episode = self.get_episode(i["id"])
                 if not episode:
                     rprint("[red]![/red] Bir hata oluştu.")
                     continue
@@ -95,7 +93,6 @@ class DiziRoll:
                 sources = episode["sources"]
                 subtitles = episode["subtitles"]
                 subtitle_src = [i["src"] for i in subtitles if i["srclang"] == "tr"][0]
-                
                 global source
                 for i in sources:
                     if i["label"] == selected_res_answer:

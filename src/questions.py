@@ -6,13 +6,13 @@ class Questions:
     to_be_downloaded = "İndirmek"
     to_be_watched = "İzlemek"
     @staticmethod
-    def get_show_name_question(dr):
+    def get_show_name_question(diziroll):
         return [
             {
                 'type': 'input',
                 'name': 'show_name',
                 'message': 'Bir dizi giriniz: ',
-                'validate': lambda val: len(dr.get_suggested_shows(val)) >= 1 or "Dizi bulunamadı"
+                'validate': lambda val: len(diziroll.get_suggested_shows(name=val)) >= 1 or "Dizi bulunamadı"
         }]
     @staticmethod
     def get_select_type():
