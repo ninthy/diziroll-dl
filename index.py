@@ -42,8 +42,6 @@ if __name__ == "__main__":
                 rprint("[red]![/red] Diziroll'a bağlanılamadı.")
                 break
             folder_name = show['slug']
-            if not path.isdir(folder_name):
-                os.mkdir(folder_name)
             selected_type = prompt(q.get_select_type())["selected_type"]
             is_downloadable = selected_type == q.to_be_downloaded
             while 1:
@@ -71,7 +69,8 @@ if __name__ == "__main__":
                     print(query)
                     input()
                     exit()
-                    
+                if not path.isdir(folder_name):
+                    os.mkdir(folder_name)
                 with Progress(SpinnerColumn(), "[progress.description]{task.description}", BarColumn(style="yellow", complete_style="green", finished_style="red"), "[progress.percentage]{task.percentage:>3.0f}%", TimeRemainingColumn()) as progress:
                     task = progress.add_task("[yellow]?[/yellow] Bölümler indiriliyor..", total=len(episodes))
                     for episode in episodes:                    
