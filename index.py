@@ -56,11 +56,17 @@ if __name__ == "__main__":
                 selected_episode_answers = prompt(q.get_select_episodes_question(selected_season["episodes"]))["selected_episodes"]
                 if len(selected_episode_answers) == 0:
                     continue
-                first_index = int(selected_episode_answers[0][0]) - 1
-                last_index = int(selected_episode_answers[-1][0]) + 1
-                total_episodes = selected_season["episodes"][first_index:last_index]
-                
+
+                episodes = selected_season["episodes"]
                 selected_res_answer = prompt(q.get_select_res_question())["selected_res"]
+                total_episodes = []
+                for episode in episodes:
+                    for i in selected_episode_answers:
+                        idx = int(i[0])
+                        if int(episode["sequence"]) == idx:
+                            total_episodes.append(episode)
+                            continue
+                
                 episodes = diziroll.get_episodes_from_season(total_episodes, selected_res_answer, selected_season)
                 if not is_downloadable:
                     query = "mpv "+' '.join([('--{ "' +i[0]+'" --sub-files="' + i[1] + '" --force-media-title="' +i[2]+ '" --term-playing-msg="'+i[2] + '" --title="'+i[2] +'" --}') for i in episodes])
