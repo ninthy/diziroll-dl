@@ -65,8 +65,11 @@ if __name__ == "__main__":
                         idx = int(i[0])
                         if int(episode["sequence"]) == idx:
                             total_episodes.append(episode)
-                            continue
+                            break
                 
+                if len(total_episodes) == 0:
+                    rprint("[red]![/red] Diziroll'a bağlanılamadı.")
+                    exit(0)
                 episodes = diziroll.get_episodes_from_season(total_episodes, selected_res_answer, selected_season)
                 if not is_downloadable:
                     query = "mpv "+' '.join([('--{ "' +i[0]+'" --sub-files="' + i[1] + '" --force-media-title="' +i[2]+ '" --term-playing-msg="'+i[2] + '" --title="'+i[2] +'" --}') for i in episodes])
