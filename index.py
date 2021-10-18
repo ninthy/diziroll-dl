@@ -9,7 +9,7 @@ import subprocess
 from rich.progress import Progress, BarColumn, SpinnerColumn, ProgressColumn, TimeRemainingColumn, DownloadColumn
 from multiprocessing import Pool
 
-VERSION = 2.0
+VERSION = 2.6
 
 clear = lambda: os.system('cls' if os.name in ('nt', 'dos') else 'clear')
 diziroll = dr()
